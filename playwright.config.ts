@@ -18,7 +18,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    // baseURL: 'http://127.0.0.1:3000',
+    baseURL: 'http://localhost:6006',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
@@ -31,4 +31,12 @@ export default defineConfig({
       use: { ...devices["Desktop Chrome"] },
     },
   ],
+
+  /* Start Storybook before running tests */
+  webServer: {
+    command: "npm run storybook",
+    url: "http://localhost:6006",
+    reuseExistingServer: !process.env.CI,
+    timeout: 30 * 1000, // 30 seconds
+  },
 });

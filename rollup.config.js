@@ -31,5 +31,14 @@ module.exports = {
       format: "es",
       exports: "named",
     },
+    {
+      file: "dist/index.umd.js",
+      format: "umd",
+      name: "MultiColorReplaceFilter",
+      globals: {
+        "pixi.js": "PIXI"
+      },
+      exports: "named",
+    },
   ],
 };
