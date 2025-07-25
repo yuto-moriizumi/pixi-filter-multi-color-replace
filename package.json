@@ -44,7 +44,7 @@
     "@storybook/html-vite": "^9.0.18",
     "@storybook/test-runner": "^0.23.0",
     "@types/jest-image-snapshot": "^6.4.0",
-    "@types/node": "^22.10.2",
+    "@types/node": "^24.1.0",
     "@typescript-eslint/eslint-plugin": "^8.18.1",
     "@typescript-eslint/parser": "^8.18.1",
     "concurrently": "^9.2.0",
