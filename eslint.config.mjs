@@ -1,8 +1,8 @@
-// For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
 import js from "@eslint/js";
 import typescript from "@typescript-eslint/eslint-plugin";
 import typescriptParser from "@typescript-eslint/parser";
 import prettier from "eslint-config-prettier";
+import globals from "globals";
 
 export default [
   js.configs.recommended,
@@ -14,6 +14,9 @@ export default [
         ecmaVersion: 2022,
         sourceType: "module",
         project: "./tsconfig.json",
+      },
+      globals: {
+        ...globals.browser,
       },
     },
     plugins: {
@@ -30,7 +33,6 @@ export default [
       "@typescript-eslint/no-explicit-any": "warn",
 
       // General rules
-      "no-console": "warn",
       "prefer-const": "error",
       "no-var": "error",
     },
