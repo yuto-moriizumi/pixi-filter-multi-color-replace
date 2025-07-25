@@ -1,9 +1,10 @@
-const js = require("@eslint/js");
-const typescript = require("@typescript-eslint/eslint-plugin");
-const typescriptParser = require("@typescript-eslint/parser");
-const prettier = require("eslint-config-prettier");
+// For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
+import js from "@eslint/js";
+import typescript from "@typescript-eslint/eslint-plugin";
+import typescriptParser from "@typescript-eslint/parser";
+import prettier from "eslint-config-prettier";
 
-module.exports = [
+export default [
   js.configs.recommended,
   {
     files: ["src/**/*.ts"],
@@ -27,7 +28,7 @@ module.exports = [
       ],
       "@typescript-eslint/explicit-function-return-type": "off",
       "@typescript-eslint/no-explicit-any": "warn",
-      
+
       // General rules
       "no-console": "warn",
       "prefer-const": "error",
