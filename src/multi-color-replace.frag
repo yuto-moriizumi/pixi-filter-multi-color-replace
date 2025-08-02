@@ -15,4 +15,6 @@ void main(void)
     int x = color.r + (color.b % 16) * 256;
     int y = color.g + (color.b / 16) * 256;
     finalColor = texelFetch(uDisplacementMap, ivec2(x, y), 0);
+    // For debugging purposes, you can uncomment the line below to see the ColorMap
+    // finalColor = texture(uDisplacementMap, vTextureCoord);
 }

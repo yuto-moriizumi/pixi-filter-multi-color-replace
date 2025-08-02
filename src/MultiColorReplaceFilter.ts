@@ -6,6 +6,7 @@ import {
   GpuProgram,
   PointData,
   Texture,
+  TextureStyle,
 } from "pixi.js";
 import { vertex, wgslVertex } from "pixi-filters";
 import fragment from "./multi-color-replace.frag";
@@ -35,6 +36,7 @@ export class MultiColorReplaceFilter extends Filter {
   private readonly _replacements: Array<[Color, Color]> = [];
   public readonly uniforms: {
     uDisplacementMap: Texture;
+    uDisplacementSampler: TextureStyle;
   };
 
   /**
@@ -93,6 +95,7 @@ export class MultiColorReplaceFilter extends Filter {
     this.colorMap = array;
     this.uniforms = {
       uDisplacementMap: texture,
+      uDisplacementSampler: texture.source.style,
     };
     this.replacements = options.replacements;
   }
@@ -113,6 +116,8 @@ export class MultiColorReplaceFilter extends Filter {
     });
 
     this.uniforms.uDisplacementMap = getColorMap(this.colorMap);
+    this.uniforms.uDisplacementSampler =
+      this.uniforms.uDisplacementMap.source.style;
   }
 
   get replacements(): Array<[ColorSource, ColorSource]> {
@@ -150,5 +155,6 @@ function getColorMap(array: Uint8Array) {
     resource: array,
     width: COLOR_MAP_WIDTH,
     height: COLOR_MAP_HEIGHT,
+    format: "bgra8unorm",
   });
 }
