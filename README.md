@@ -1,5 +1,10 @@
 # @volgakurvar/pixi-filter-multi-color-replace
 
+[![npm version](https://badge.fury.io/js/@volgakurvar%2Fpixi-filter-multi-color-replace.svg)](https://badge.fury.io/js/@volgakurvar%2Fpixi-filter-multi-color-replace)
+[![npm downloads](https://img.shields.io/npm/dm/@volgakurvar/pixi-filter-multi-color-replace.svg)](https://www.npmjs.com/package/@volgakurvar/pixi-filter-multi-color-replace)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
+
 A high-performance multi-color replacement filter for PixiJS. Achieves fast processing through texture-based color replacement using color map textures.
 This filter is blazing faster than original `pixi-filters/multi-color-replace` filter when replacement count is big.
 
