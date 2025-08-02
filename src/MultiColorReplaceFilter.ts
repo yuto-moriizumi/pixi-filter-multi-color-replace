@@ -155,6 +155,5 @@ function getColorMap(array: Uint8Array) {
     resource: array,
     width: COLOR_MAP_WIDTH,
     height: COLOR_MAP_HEIGHT,
-    format: "bgra8unorm",
   });
 }
