@@ -6,6 +6,7 @@ import {
   GlProgram,
   GpuProgram,
 } from "pixi.js";
+import { vertex, wgslVertex } from "pixi-filters";
 import fragment from "./multi-color-replace.frag";
 import source from "./multi-color-replace.wgsl";
 
@@ -123,26 +124,9 @@ export class MultiColorReplaceFilter extends Filter {
 
     const maxColors = options.maxColors ?? options.replacements.length;
 
-    // Use default vertex shader
-    const vertex = `
-            in vec2 aPosition;
-            in vec2 aUV;
-            
-            out vec2 vTextureCoord;
-            
-            uniform mat3 uProjectionMatrix;
-            uniform mat3 uWorldTransformMatrix;
-            
-            void main(void) {
-                mat3 mvp = uProjectionMatrix * uWorldTransformMatrix;
-                gl_Position = vec4((mvp * vec3(aPosition, 1.0)).xy, 0.0, 1.0);
-                vTextureCoord = aUV;
-            }
-        `;
-
     const gpuProgram = GpuProgram.from({
       vertex: {
-        source: source.replace(/\$\{MAX_COLORS\}/g, maxColors.toFixed(0)),
+        source: wgslVertex,
         entryPoint: "mainVertex",
       },
       fragment: {

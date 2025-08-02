@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import * as filters from "pixi-filters";
+import { MultiColorReplaceFilter } from "../../MultiColorReplaceFilter";
 
 interface FilterStoryOptions {
   originalColor: number;
@@ -38,7 +38,7 @@ export function createFilterStory(options: FilterStoryOptions): HTMLElement {
         width,
         height,
         backgroundColor: 0xffffff,
-        preference
+        preference,
       };
 
       await app.init(initOptions);
@@ -61,7 +61,7 @@ export function createFilterStory(options: FilterStoryOptions): HTMLElement {
       // pixi-filtersのMultiColorReplaceFilterを適用
       console.log("Applying pixi-filters MultiColorReplaceFilter");
 
-      const filter = new filters.MultiColorReplaceFilter(
+      const filter = new MultiColorReplaceFilter(
         [[originalColor, targetColor]], // 色置換設定: [[元の色, 置換後の色]]
         tolerance, // 許容値
       );

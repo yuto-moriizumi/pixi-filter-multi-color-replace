@@ -30,6 +30,17 @@ const config: StorybookConfig = {
       }
     }
 
+    // GLSLファイル（.frag, .vert, .wgsl）を文字列として処理するプラグインを追加
+    config.plugins = config.plugins || [];
+    config.plugins.push({
+      name: 'glsl-loader',
+      transform(code: string, id: string) {
+        if (id.endsWith('.frag') || id.endsWith('.vert') || id.endsWith('.wgsl')) {
+          return `export default ${JSON.stringify(code)};`;
+        }
+      },
+    });
+
     return config;
   }
 };
