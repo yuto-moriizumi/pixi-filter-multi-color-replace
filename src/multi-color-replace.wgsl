@@ -1,49 +1,20 @@
-struct MultiColorReplaceUniforms {
-  uOriginalColors: array<vec3<f32>, MAX_COLORS>,
-  uTargetColors: array<vec3<f32>, MAX_COLORS>,
-  uTolerance:f32,
-};
-
 @group(0) @binding(1) var uTexture: texture_2d<f32>; 
 @group(0) @binding(2) var uSampler: sampler;
-@group(1) @binding(0) var<uniform> multiColorReplaceUniforms : MultiColorReplaceUniforms;
+@group(1) @binding(0) var uDisplacementMap: texture_2d<f32>;
+@group(1) @binding(1) var uDisplacementSampler: sampler;
 
 @fragment
 fn mainFragment(
   @builtin(position) position: vec4<f32>,
   @location(0) uv : vec2<f32>
 ) -> @location(0) vec4<f32> {
-  let uOriginalColors = multiColorReplaceUniforms.uOriginalColors;
-  let uTargetColors = multiColorReplaceUniforms.uTargetColors;
-  let uTolerance = multiColorReplaceUniforms.uTolerance;
-
-  var color: vec4<f32> = textureSample(uTexture, uSampler, uv);
-
-  let alpha: f32 = color.a;
-
-  if (alpha > 0.0001)
-  {
-    var modColor: vec3<f32> = vec3<f32>(color.rgb) / alpha;
-
-    for(var i: i32 = 0; i < MAX_COLORS; i += 1)
-    {
-      let origColor: vec3<f32> = uOriginalColors[i];
-      if (origColor.r < 0.0)
-      {
-        break;
-      }
-      let colorDiff: vec3<f32> = origColor - modColor;
-      
-      if (length(colorDiff) < uTolerance)
-      {
-        let targetColor: vec3<f32> = uTargetColors[i];
-        color = vec4((targetColor + colorDiff) * alpha, alpha);
-        return color;
-      }
-    }
-  }
-
-  return color;
+  let originalColor: vec4<f32> = textureSample(uTexture, uSampler, uv);
+  let color: vec3<i32> = vec3<i32>(originalColor.rgb * 255.0);
+  let x: i32 = color.r + (color.b % 16) * 256;
+  let y: i32 = color.g + i32(floor(f32(color.b) / 16.0)) * 256;
+  let finalColor: vec4<f32> = textureLoad(uDisplacementMap, vec2<i32>(x, y), 0);
+  // For debugging purposes, you can uncomment the line below to see ColorMap
+  // let finalColor: vec4<f32> = textureSample(uDisplacementMap, uDisplacementSampler, uv);
+  // 元テクスチャのRGBAがWebGPUだとBGRAと解釈されるため、bgraと取得して元に戻す
+  return finalColor.bgra;
 }
-
-const MAX_COLORS: i32 = ${MAX_COLORS};

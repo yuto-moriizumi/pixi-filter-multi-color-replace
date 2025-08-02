@@ -1,38 +1,20 @@
+#version 300 es
+
+precision highp float;
+
 in vec2 vTextureCoord;
 out vec4 finalColor;
 
-const int MAX_COLORS = ${MAX_COLORS};
-
 uniform sampler2D uTexture;
-uniform vec3 uOriginalColors[MAX_COLORS];
-uniform vec3 uTargetColors[MAX_COLORS];
-uniform float uTolerance;
+uniform sampler2D uDisplacementMap;
 
 void main(void)
 {
-    finalColor = texture(uTexture, vTextureCoord);
-
-    float alpha = finalColor.a;
-    if (alpha < 0.0001)
-    {
-      return;
-    }
-
-    vec3 color = finalColor.rgb / alpha;
-
-    for(int i = 0; i < MAX_COLORS; i++)
-    {
-      vec3 origColor = uOriginalColors[i];
-      if (origColor.r < 0.0)
-      {
-        break;
-      }
-      vec3 colorDiff = origColor - color;
-      if (length(colorDiff) < uTolerance)
-      {
-        vec3 targetColor = uTargetColors[i];
-        finalColor = vec4((targetColor + colorDiff) * alpha, alpha);
-        return;
-      }
-    }
+    vec4 originalColor = texture(uTexture, vTextureCoord);
+    ivec3 color = ivec3(originalColor.rgb * 255.0);
+    int x = color.r + (color.b % 16) * 256;
+    int y = color.g + (color.b / 16) * 256;
+    finalColor = texelFetch(uDisplacementMap, ivec2(x, y), 0);
+    // For debugging purposes, you can uncomment the line below to see the ColorMap
+    // finalColor = texture(uDisplacementMap, vTextureCoord);
 }

@@ -1,66 +1,53 @@
-# PixiJS MultiColorReplaceFilter
+# @volgakurvar/pixi-filter-multi-color-replace
 
-PixiJS用の高性能な多色置換フィルターです。[PixiJS Filters](https://github.com/pixijs/filters)の公式実装をベースにしたスタンドアロンパッケージです。
+A high-performance multi-color replacement filter for PixiJS. Achieves fast processing through texture-based color replacement using color map textures.
+This filter is blazing faster than original `pixi-filters/multi-color-replace` filter when replacement count is big.
 
-## 特徴
+## Features
 
-- ✅ 複数の色を同時に置換可能
-- ✅ PixiJS v8対応
-- ✅ TypeScript完全対応
-- ✅ WebGL・WebGPU両対応
-- ✅ 公式実装と完全互換
+- ✅ High-speed color replacement with color map textures
+- ✅ PixiJS v8 support
+- ✅ Full TypeScript support
+- ✅ WebGL & WebGPU compatible
+- ✅ Supports ~16 million color replacements with 4096x4096 color map
 
-## インストール
+## Installation
 
 ```bash
 npm install @volgakurvar/pixi-filter-multi-color-replace
 ```
 
-## 使用方法
+## Usage
 
-### 基本的な使用例
+### Basic Usage
 
 ```typescript
-import { Application, Sprite, Texture } from 'pixi.js';
-import { MultiColorReplaceFilter } from '@volgakurvar/pixi-filter-multi-color-replace';
+import { Application, Sprite, Color } from "pixi.js";
+import { MultiColorReplaceFilter } from "@volgakurvar/pixi-filter-multi-color-replace";
 
 const app = new Application();
-const sprite = Sprite.from('your-image.png');
+const sprite = Sprite.from("your-image.png");
 
-// 赤色を青色に置換
+// Replace red with blue
 const filter = new MultiColorReplaceFilter({
   replacements: [
-    [0xFF0000, 0x0000FF] // [元の色, 置換後の色]
+    [new Color(0xff0000), new Color(0x0000ff)], // [source color, target color]
   ],
-  tolerance: 0.05
 });
 
 sprite.filters = [filter];
 app.stage.addChild(sprite);
 ```
 
-### 複数色の同時置換
+### Multiple Color Replacement
 
 ```typescript
 const filter = new MultiColorReplaceFilter({
   replacements: [
-    [0xFF0000, 0x0000FF], // 赤 → 青
-    [0x00FF00, 0xFFFF00], // 緑 → 黄色
-    [0x0000FF, 0xFF0000]  // 青 → 赤
+    [new Color(0xff0000), new Color(0x0000ff)], // red → blue
+    [new Color(0x00ff00), new Color(0xffff00)], // green → yellow
+    [new Color(0x0000ff), new Color(0xff0000)], // blue → red
   ],
-  tolerance: 0.1
-});
-```
-
-### RGB配列での色指定
-
-```typescript
-const filter = new MultiColorReplaceFilter({
-  replacements: [
-    [[1, 0, 0], [0, 0, 1]], // 赤 → 青 (RGB値は0-1)
-    [[0, 1, 0], [1, 1, 0]]  // 緑 → 黄色
-  ],
-  tolerance: 0.05
 });
 ```
 
@@ -68,83 +55,102 @@ const filter = new MultiColorReplaceFilter({
 
 ### MultiColorReplaceFilter
 
-#### コンストラクタ
+#### Constructor
 
 ```typescript
-new MultiColorReplaceFilter(options?: MultiColorReplaceFilterOptions)
+new MultiColorReplaceFilter(options: MultiColorReplaceFilterOptions)
 ```
 
-#### オプション
+#### Options
 
-| プロパティ | 型 | デフォルト | 説明 |
-|-----------|-----|----------|-----|
-| `replacements` | `Array<[ColorSource, ColorSource]>` | `[[0xff0000, 0x0000ff]]` | 置換する色のペア配列 |
-| `tolerance` | `number` | `0.05` | 色マッチングの許容範囲（小さいほど厳密） |
-| `maxColors` | `number` | `replacements.length` | 最大置換色数（コンパイル時に固定） |
+| Property       | Type                    | Description                     |
+| -------------- | ----------------------- | ------------------------------- |
+| `replacements` | `Array<[Color, Color]>` | Array of color pairs (required) |
 
-#### プロパティ
+#### Properties
 
-| プロパティ | 型 | 説明 |
-|-----------|-----|-----|
-| `replacements` | `Array<[ColorSource, ColorSource]>` | 置換色ペア（読み書き可能） |
-| `tolerance` | `number` | 許容範囲（読み書き可能） |
-| `maxColors` | `number` | 最大色数（読み取り専用） |
+| Property       | Type                                | Description                          |
+| -------------- | ----------------------------------- | ------------------------------------ |
+| `replacements` | `Array<[ColorSource, ColorSource]>` | Color replacement pairs (read/write) |
 
-#### メソッド
+#### Methods
 
-| メソッド | 説明 |
-|---------|-----|
-| `refresh()` | replacements配列を直接変更した後に呼び出してフィルターを更新 |
+| Method      | Description                                                           |
+| ----------- | --------------------------------------------------------------------- |
+| `refresh()` | Call after directly modifying the replacements array to update filter |
 
-### ColorSource型
+### Color Type
 
-色は以下の形式で指定できます：
+Colors use PixiJS's `Color` class:
 
-- `number`: `0xFF0000` (16進数)
-- `number[]`: `[1, 0, 0]` (RGB配列、各値0-1)
-- `Float32Array`: RGB値の配列
+```typescript
+import { Color } from "pixi.js";
 
-## パフォーマンス
+// Create from hex
+const red = new Color(0xff0000);
 
-- **色数が多い場合**: 現在の実装は線形検索を使用するため、色数が多いとパフォーマンスが低下する可能性があります
-- **推奨**: 同時置換する色は10色以下に抑えることを推奨
-- **最適化**: 頻繁に変更される場合は`maxColors`を適切に設定してください
+// Create from RGB values (0-255)
+const blue = new Color([0, 0, 255]);
 
-## ブラウザ対応
+// Create from RGB values (0-1)
+const green = new Color([0, 1, 0]);
+```
+
+## Technical Specifications
+
+### Color Map Texture
+
+This filter uses a 4096x4096 color map texture for color replacement:
+
+- **Size**: 4096x4096 pixels
+- **Encoding**: RGB values mapped to coordinates (R + G*256 + B*256\*256)
+- **Grid Structure**: Organized as 16x16 blue channel grids
+
+### Performance
+
+- **Memory Usage**: ~67MB color map texture
+- **Processing Speed**: O(1) color replacement through texture lookup
+- **GPU Optimization**: High-speed rendering with WebGL/WebGPU support
+
+## Browser Support
 
 - Chrome 91+
 - Firefox 89+
 - Safari 14.1+
 - Edge 91+
 
-WebGL 2.0またはWebGPUをサポートするブラウザが必要です。
+Browsers that support WebGL 2.0 or WebGPU are required.
 
-## デモ
+## Demo
 
-[example.html](./example.html)を開いてブラウザでデモを確認できます。
+Open [example.html](./example.html) in your browser to see the demo.
 
-## 開発
+## Development
 
 ```bash
-# 依存関係のインストール
+# Install dependencies
 npm install
 
-# ビルド
+# Build
 npm run build
 
-# 開発モード（ウォッチ）
+# Development mode (watch)
 npm run dev
 ```
 
-## ライセンス
+## License
 
 MIT License
 
-## 関連パッケージ
+## Related Packages
 
-- [pixi.js](https://pixijs.com/) - PixiJS本体
-- [@pixi/filters](https://github.com/pixijs/filters) - PixiJS公式フィルター集
+- [pixi.js](https://pixijs.com/) - PixiJS core
+- [@pixi/filters](https://github.com/pixijs/filters) - Official PixiJS filters collection
 
-## 貢献
+## Contributing
 
-バグ報告や機能要望は[Issues](https://github.com/your-username/pixi-filter-multi-color-replace/issues)でお願いします。
+Please report bugs and feature requests at [Issues](https://github.com/your-username/pixi-filter-multi-color-replace/issues).
+
+## Acknowledgements
+
+Great thanks to the January Desk for the inspiration https://youtu.be/tAU95loPiD8?si=Kmt9kXNlGiwVI5qm
