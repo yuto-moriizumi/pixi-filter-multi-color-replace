@@ -61,7 +61,7 @@
     "typescript": "^5.7.2",
     "vite": "^7.0.6",
     "vite-plugin-dts": "^4.5.4",
-    "wait-on": "^8.0.4"
+    "wait-on": "^9.0.0"
   },
   "dependencies": {
     "pixi-filters": "^6.1.4"
