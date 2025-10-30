@@ -41,7 +41,7 @@
     "pixi.js": "^8.0.0"
   },
   "devDependencies": {
-    "@storybook/addon-docs": "^9.1.0",
+    "@storybook/addon-docs": "^10.0.1",
     "@storybook/html-vite": "^9.1.0",
     "@storybook/test-runner": "^0.23.0",
     "@types/jest-image-snapshot": "^6.4.0",
