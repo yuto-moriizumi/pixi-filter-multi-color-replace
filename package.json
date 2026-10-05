@@ -43,7 +43,7 @@
   "devDependencies": {
     "@storybook/addon-docs": "^10.1.4",
     "@storybook/html-vite": "^10.1.4",
-    "@storybook/test-runner": "^0.24.2",
+    "@storybook/test-runner": "^0.26.0",
     "@types/jest-image-snapshot": "^6.4.0",
     "@types/node": "^26.0.0",
     "@typescript-eslint/eslint-plugin": "^8.18.1",
